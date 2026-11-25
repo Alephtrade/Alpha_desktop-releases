@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - alpha-desktop-artifacts
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -13,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: alpha-desktop-artifacts
 
       - name: Validate and publish signed release
         env:
