@@ -5,6 +5,8 @@ on:
     branches:
       - alpha-desktop-artifacts
   workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'
 
 permissions:
   contents: write
@@ -45,6 +47,12 @@ jobs:
 
           tag="v${version}"
           if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            if gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets \
+              --jq ".assets | map(.name) | (index(\"$installer\") != null and index(\"$signature_file\") != null and index(\"latest.json\") != null)" \
+              | grep -qx true; then
+              echo "Release $tag already contains the installer, signature, and update manifest."
+              exit 0
+            fi
             gh release upload "$tag" "$installer" "$signature_file" latest.json --clobber --repo "$GITHUB_REPOSITORY"
           else
             gh release create "$tag" "$installer" "$signature_file" latest.json \
