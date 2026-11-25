@@ -1,0 +1,53 @@
+name: Publish Alpha Desktop release
+
+on:
+  push:
+    branches:
+      - alpha-desktop-artifacts
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate and publish signed release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          version="$(jq -er '.version' latest.json)"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid Alpha Desktop version: $version" >&2
+            exit 1
+          fi
+
+          installer="AlphaDesktop-Setup-${version}.exe"
+          signature_file="${installer}.sig"
+          test -s "$installer"
+          test -s "$signature_file"
+          test -s latest.json
+
+          manifest_signature="$(jq -er '.platforms["windows-x86_64"].signature' latest.json)"
+          file_signature="$(tr -d '\r\n' < "$signature_file")"
+          test "$manifest_signature" = "$file_signature"
+
+          expected_url="https://github.com/Alephtrade/Alpha_desktop-releases/releases/download/v${version}/${installer}"
+          manifest_url="$(jq -er '.platforms["windows-x86_64"].url' latest.json)"
+          test "$manifest_url" = "$expected_url"
+
+          tag="v${version}"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$tag" "$installer" "$signature_file" latest.json --clobber --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$tag" "$installer" "$signature_file" latest.json \
+              --title "Alpha Desktop ${version}" \
+              --notes "Signed Windows update for Alpha Desktop ${version}." \
+              --target "$GITHUB_SHA" \
+              --latest \
+              --repo "$GITHUB_REPOSITORY"
+          fi
