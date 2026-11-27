@@ -1,0 +1,11 @@
+{
+  "pub_date": "2026-11-27T12:27:44.0994159Z",
+  "platforms": {
+    "windows-x86_64": {
+      "url": "https://github.com/Alephtrade/Alpha_desktop-releases/releases/download/v0.1.6/AlphaDesktop-Setup-0.1.6.exe",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTUjMrblR0TXhSQllvUDhGb1o5VWlhc0dSeTRqTVFndDU1Ymp6N0NNMDc1SDArcWpzR2dxcUZBVFpSMERlaFhqQW95QTk2K3BScUdUWVQzZFZma1JuWWJ6ck05KzZaMGdnPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzk1NzgyNDYxCWZpbGU6QWxwaGEgRGVza3RvcF8wLjEuNl94NjQtc2V0dXAuZXhlCXZlcnNpb246MC4xLjYKUjY2eUxjK2xadmRaa3RuOEVJZVRmY2U1OTV3N09IRS95VHlNUWNIVEJJZzkwdXQ2L0NtNGJFQXB4RGw0SXhoR2NRbVJhTnNpM2NxL1UvY1NvWHlnQ1E9PQo="
+    }
+  },
+  "version": "0.1.6",
+  "notes": "Alpha Desktop 0.1.6"
+}
